@@ -31,6 +31,7 @@ class Typewriter {
   }
 
   options = {
+    initialText: null,
     strings: null,
     cursor: '|',
     delay: 'natural',
@@ -78,7 +79,7 @@ class Typewriter {
   init() {
     this.setupWrapperElement();
     this.addEventToQueue(EVENT_NAMES.CHANGE_CURSOR, { cursor: this.options.cursor }, true);
-    this.addEventToQueue(EVENT_NAMES.REMOVE_ALL, null, true);
+    // this.addEventToQueue(EVENT_NAMES.REMOVE_ALL, null, true);
 
     if(window && !window.___TYPEWRITER_JS_STYLES_ADDED___ && !this.options.skipAddStyles) {
       addStyles(STYLES);
@@ -106,6 +107,21 @@ class Typewriter {
 
     this.state.elements.cursor.innerHTML = this.options.cursor;
     this.state.elements.container.innerHTML = '';
+
+    // add in initial element
+    let initialElem = this.options.initialText;
+    if (initialElem) {
+      const node = createElementFromHTML(initialElem);
+      this.state.elements.wrapper.appendChild(node);
+      this.state.visibleNodes = [
+        ...this.state.visibleNodes,
+        {
+          type: VISIBLE_NODE_TYPES.HTML_TAG,
+          node,
+          parentNode: this.state.elements.wrapper,
+        },
+      ];
+    }
 
     this.state.elements.container.appendChild(this.state.elements.wrapper);
     this.state.elements.container.appendChild(this.state.elements.cursor);
@@ -752,6 +768,14 @@ class Typewriter {
       console.log(message);
     }
   }
+}
+
+function createElementFromHTML(htmlString) {
+  var div = document.createElement('div');
+  div.innerHTML = htmlString.trim();
+
+  // Change this to div.childNodes to support multiple top-level nodes.
+  return div.firstChild;
 }
 
 export default Typewriter;

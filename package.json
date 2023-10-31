@@ -1,5 +1,5 @@
 {
-  "name": "typewriter-effect",
+  "name": "@0kzh/typewriter-effect",
   "version": "2.21.0",
   "main": "dist/react.js",
   "types": "index.d.ts",
